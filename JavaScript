@@ -1,0 +1,93 @@
+const readlineSync = require('readline-sync');
+
+let squares = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+//Play the game
+function play() {
+    let player = 1;
+    let choice, mark;
+
+    do {
+        getBoard();
+        player = (player % 2) ? 1 : 2;
+        console.log("Enter your choice: ");
+        choice = parseInt(readlineSync.prompt());
+        mark = (player === 1) ? 'X' : 'O';
+
+        if (squares[choice - 1] === String(choice)) {
+            squares[choice - 1] = mark;
+        } else {
+            console.log("Invalid move ");
+            player--;
+            continue;
+        }
+
+        let result = checkWin();
+        player++;
+
+        if (result === 1) {
+            console.log(`Player ${player - 1} Wins`);
+            break;
+        } else if (result === 0) {
+            console.log("Game Draw");
+            break;
+        }
+    } while (true);
+
+    getBoard();
+}
+// Print the board
+function getBoard() {
+    console.log("\n\n\tTic Tac Toe\n\n");
+    console.log("Player 1 (X) - Player 2 (O)\n");
+    console.log(`\n   |   |   \n ${squares[0]} | ${squares[1]} | ${squares[2]}\n___|___|___\n   |   |   \n ${squares[3]} | ${squares[4]} | ${squares[5]}\n___|___|___\n   |   |   \n ${squares[6]} | ${squares[7]} | ${squares[8]}\n   |   |   \n`);
+}
+
+/**********************************************************************************************************
+Return 1 if some one wins
+Return 0 if draw
+Return -1 if the game is not over
+***********************************************************************************************************/
+
+function checkWin() {
+    if (squares[0] === squares[1] && squares[1] === squares[2]) {
+        return 1;
+    } else if (squares[0] === squares[3] && squares[3] === squares[6]) {
+        return 1;
+    } else if (squares[0] === squares[4] && squares[4] === squares[8]) {
+        return 1;
+    } else if (squares[3] === squares[4] && squares[4] === squares[5]) {
+        return 1;
+    } else if (squares[1] === squares[4] && squares[4] === squares[7]) {
+        return 1;
+    } else if (squares[6] === squares[4] && squares[4] === squares[2]) {
+        return 1;
+    } else if (squares[6] === squares[7] && squares[7] === squares[8]) {
+        return 1;
+    } else if (squares[2] === squares[5] && squares[5] === squares[8]) {
+        return 1;
+    } else if (squares[0] !== '1' && squares[1] !== '2' && squares[2] !== '3' && squares[3] !== '4' && squares[4] !== '5' && squares[5] !== '6' && squares[6] !== '7' && squares[7] !== '8' && squares[8] !== '9') {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+//Clearing the board for playing again
+function clearBoard() {
+    squares = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+}
+
+let again = 'x';
+
+do {
+    play();
+    console.log("Do you want to play again(y/n): ");
+    again = readlineSync.prompt().toLowerCase();
+
+    if (again === 'y') {
+        clearBoard();
+    } else {
+        break;
+    }
+} while (again === 'y');
